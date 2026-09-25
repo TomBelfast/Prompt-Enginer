@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Header } from './components/Header';
-import { InputPanel } from './components/InputPanel';
+import { InputHero } from './components/InputHero';
 import { OutputPanel } from './components/OutputPanel';
+import { SettingsPanel } from './components/SettingsPanel';
 import { HistoryPanel } from './components/HistoryPanel';
 import { MainLayout } from './components/MainLayout';
 import { GuidelinesModal } from './components/GuidelinesModal';
@@ -37,7 +38,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(true);
+  const [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(false);
   const [isGuidelinesOpen, setIsGuidelinesOpen] = useState<boolean>(false);
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
@@ -47,7 +48,6 @@ const App: React.FC = () => {
       if (storedHistory) {
         setHistory(JSON.parse(storedHistory));
       } else {
-        // Fallback check for older history
         const legacy = localStorage.getItem('prompt-history');
         if (legacy) {
           const parsed = JSON.parse(legacy);
@@ -102,6 +102,8 @@ const App: React.FC = () => {
     if (item.structuredPrompt.options) {
       setOptions(item.structuredPrompt.options);
     }
+    // Scroll smoothly to output
+    window.scrollTo({ top: 320, behavior: 'smooth' });
   }, []);
 
   const handleClearHistory = useCallback(() => {
@@ -134,7 +136,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-gray-800 dark:text-gray-100 font-sans flex flex-col bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
+    <div className="min-h-screen text-gray-800 dark:text-gray-100 font-sans flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       <Header 
         onToggleHistory={handleToggleHistory} 
         isHistoryVisible={isHistoryVisible}
@@ -152,8 +154,8 @@ const App: React.FC = () => {
             onClear={handleClearHistory} 
           />
         }
-        inputPanel={
-          <InputPanel
+        inputHero={
+          <InputHero
             value={userInput}
             onValueChange={setUserInput}
             options={options}
@@ -171,6 +173,12 @@ const App: React.FC = () => {
             onOpenGuidelines={() => setIsGuidelinesOpen(true)}
           />
         }
+        settingsPanel={
+          <SettingsPanel
+            options={options}
+            onOptionsChange={setOptions}
+          />
+        }
       />
 
       <GuidelinesModal
@@ -178,18 +186,30 @@ const App: React.FC = () => {
         onClose={() => setIsGuidelinesOpen(false)}
       />
 
-      <footer className="text-center p-4 text-gray-500 dark:text-gray-400 text-xs border-t border-gray-200 dark:border-gray-800/60 bg-white/50 dark:bg-gray-900/50">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-          <span>Standard Inżynierii Promptów: <strong>Wrzesień 2026</strong></span>
-          <span className="hidden sm:inline">•</span>
-          <span>Silnik: <strong>Google Gemini 3.8 Flash</strong></span>
-          <span className="hidden sm:inline">•</span>
-          <button
-            onClick={() => setIsGuidelinesOpen(true)}
-            className="text-lime-600 dark:text-lime-400 hover:underline font-semibold"
-          >
-            Zobacz pełny przewodnik wytycznych
-          </button>
+      <footer className="text-center p-5 text-gray-500 dark:text-gray-400 text-xs border-t border-gray-200 dark:border-gray-800/60 bg-white/70 dark:bg-gray-900/50 mt-auto">
+        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 max-w-7xl">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-800 dark:text-gray-200">Prompt Structurizer 2026</span>
+            <span>•</span>
+            <span>Standard: <strong>Wrzesień 2026</strong></span>
+            <span>•</span>
+            <span>Silnik: <strong>Gemini 3.8 Flash</strong></span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsGuidelinesOpen(true)}
+              className="text-lime-600 dark:text-lime-400 hover:underline font-semibold"
+            >
+              Wytyczne Prompt Engineeringu
+            </button>
+            <button
+              onClick={handleToggleHistory}
+              className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+            >
+              {isHistoryVisible ? 'Ukryj historię' : 'Pokaż historię'}
+            </button>
+          </div>
         </div>
       </footer>
     </div>

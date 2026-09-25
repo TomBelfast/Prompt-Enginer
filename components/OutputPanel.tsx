@@ -110,7 +110,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = ({
               Twój ustrukturyzowany prompt pojawi się tutaj
             </p>
             <p className="text-xs text-gray-400 mt-1 max-w-sm">
-              Wybierz szablon lub wpisz ideę po lewej stronie, aby przekształcić ją według standardów na wrzesień 2026 r.
+              Wpisz ideę w polu powyżej i kliknij przycisk, aby przekształcić ją według standardów na wrzesień 2026 r.
             </p>
           </div>
           <button

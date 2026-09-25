@@ -9,11 +9,17 @@
     <meta property="og:description" content="Transform simple ideas into frontier-grade structured prompts using the latest September 2026 prompt engineering guidelines and Gemini 3 models." />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {}
+        }
+      };
       // Set theme on initial load to prevent FOUC (Flash of Unstyled Content)
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
+        document.documentElement.classList.add('dark');
       } else {
-        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.remove('dark');
       }
     </script>
   <script type="importmap">
